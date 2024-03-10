@@ -9,10 +9,8 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         try {
-            //Get CSV urls
             final String CSV_LIST_URL = "https://journeyblobstorage.blob.core.windows.net/sabpublic/list";
             List<String> CsvUrls = getCsvUrls(CSV_LIST_URL);
-            //Count zip-codes in csv files
             printZipCodeCounts(CsvUrls);
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -33,9 +31,10 @@ public class Main {
         Map<String, Integer> zipCodeCount = new HashMap<>();
         for (String CsvUrl : CsvUrls) {
             BufferedReader bufferedReader = getBufferedReader(CsvUrl);
+            final int ZIP_CODE_COLUMN = 8;
             String row = bufferedReader.readLine();     //moves past the first title row
             while ((row = bufferedReader.readLine()) != null) {
-                String zipCode = row.split(",")[8];     //zip-code is the 8th column of csv file
+                String zipCode = row.split(",")[ZIP_CODE_COLUMN];
                 if (zipCodeCount.containsKey(zipCode)) {
                     zipCodeCount.put(zipCode, zipCodeCount.get(zipCode) + 1);
                 } else {
