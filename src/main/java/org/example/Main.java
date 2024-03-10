@@ -11,7 +11,8 @@ public class Main {
         try {
             final String CSV_LIST_URL = "https://journeyblobstorage.blob.core.windows.net/sabpublic/list";
             List<String> CsvUrls = getCsvUrls(CSV_LIST_URL);
-            printZipCodeCounts(CsvUrls);
+            Map<String, Integer> zipCodeCounts = getZipCodeCounts(CsvUrls);
+            printZipCodeCounts(zipCodeCounts);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -27,7 +28,7 @@ public class Main {
         return CsvUrls;
     }
 
-    private static void printZipCodeCounts(List<String> CsvUrls) throws IOException {
+    private static Map<String, Integer> getZipCodeCounts(List<String> CsvUrls) throws IOException {
         Map<String, Integer> zipCodeCount = new HashMap<>();
         for (String CsvUrl : CsvUrls) {
             BufferedReader bufferedReader = getBufferedReader(CsvUrl);
@@ -42,12 +43,18 @@ public class Main {
                 }
             }
         }
-        System.out.println(List.of(zipCodeCount));
+        return zipCodeCount;
     }
 
     private static BufferedReader getBufferedReader(String urlInput) throws IOException {
         URL url = new URL(urlInput);
         InputStreamReader inputStreamReader = new InputStreamReader(url.openConnection().getInputStream());
         return new BufferedReader(inputStreamReader);
+    }
+
+    private static void printZipCodeCounts(Map<String, Integer> zipCodeCounts){
+        for(Map.Entry<String, Integer> zip : zipCodeCounts.entrySet()){
+            System.out.println("Zip-Code: " + zip.getKey() + ", Count: " + zip.getValue());
+        }
     }
 }
